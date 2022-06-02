@@ -1,0 +1,12 @@
+﻿  pch.cpp
+  dllmain.cpp
+  Phase2UDM.cpp
+     Criando biblioteca D:\github\PHASE2UDM\x64\Release\Phase2UDM.lib e objeto D:\github\PHASE2UDM\x64\Release\Phase2UDM.exp
+  Gerando código
+  118 of 146 functions (80.8%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    1 functions had inline decision re-evaluated but remain unchanged
+  Finalizada a geração de código
+UDMLib.lib(matrix.obj) : warning LNK4099: PDB 'UDMLib.pdb' não foi encontrado 'UDMLib.lib(matrix.obj)' ou no 'D:\github\PHASE2UDM\x64\Release\UDMLib.pdb'; vinculando objeto quando quando sem nenhuma informação de depuração
+UDMLib.lib(MatUserDefined.obj) : warning LNK4099: PDB 'UDMLib.pdb' não foi encontrado 'UDMLib.lib(MatUserDefined.obj)' ou no 'D:\github\PHASE2UDM\x64\Release\UDMLib.pdb'; vinculando objeto quando quando sem nenhuma informação de depuração
+  Phase2UDM.vcxproj -> D:\github\PHASE2UDM\x64\Release\Phase2UDM.dll
