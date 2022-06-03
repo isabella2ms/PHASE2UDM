@@ -17,11 +17,15 @@ Elastic::Elastic() : MatUserDefined()
 	isTangential = false;
 	nStateVars = 1;
 
-	_dE = 0.0;
+	_dCK = 0.0;
+	_dn = 0.0;
 	_dNu = 0.0;
-	_dKappa = 0.0;
-	_dLambda = 0.0;
-	_dM = 0.0;
+	_dRf = 0.0;
+	_dc = 0.0;
+	_dfi = 0.0;
+	_dE = 0.0;
+	_de = 0.0;
+	_dG = 0.0;
 }
 
 
@@ -39,23 +43,31 @@ Matrix Elastic::ComputeElasticMatrix(Vector stress, Vector strain, Vector& state
 	assert(abs(1 - _dNu) > 10e-15);
 	assert(abs(2 * (1 - _dNu)) > 10e-15);
 
-	double dE = _dE, dNu = _dNu;
-	double c44 = dE / (2.0 + 2.0 * dNu);
-	double c12 = dE * dNu / ((1.0 + dNu) * (1.0 - 2.0 * dNu));
-	double c11 = c12 + 2.0 * c44;
+	_dE = _dCK * pow(stress[2], _dn);
+	_dG = _dE / 2*(1 - _dNu);
+	double num, den;
 
-	Emat(0, 0) = c11;
-	Emat(0, 1) = c12;
-	Emat(0, 2) = c12;
-	Emat(1, 0) = c12;
-	Emat(1, 1) = c11;
-	Emat(1, 2) = c12;
-	Emat(2, 0) = c12;
-	Emat(2, 1) = c12;
-	Emat(2, 2) = c11;
-	Emat(3, 3) = c44;
-	Emat(4, 4) = c44;
-	Emat(5, 5) = c44;
+	num = _dRf * (stress[0] - stress[2])*(1 - sin(_dfi));
+	den = 2 * _dc*cos(_dfi) + 2 * stress[2] * sin(_dfi);
+	_de = _dE * pow((1 - num / den),2);
+
+	double dE = _dE, dNu = _dNu, dG = _dG, de =_de;
+	double c1 = 1/dG;
+	double c2 = -dNu/de;
+	double c3 = 1/de;
+
+	Emat(0, 0) = c3;
+	Emat(0, 1) = c2;
+	Emat(0, 2) = c2;
+	Emat(1, 0) = c2;
+	Emat(1, 1) = c3;
+	Emat(1, 2) = c2;
+	Emat(2, 0) = c2;
+	Emat(2, 1) = c2;
+	Emat(2, 2) = c3;
+	Emat(3, 3) = c1;
+	Emat(4, 4) = c1;
+	Emat(5, 5) = c1;
 
 	return Emat;
 }
@@ -84,11 +96,13 @@ void Elastic::UpdateStress(Vector& stress, Vector& strain, Vector& stateVariable
 
 void Elastic::SetConstitutiveParameters(Vector& parameters)
 {
-	_dE = parameters[0];
-	_dNu = parameters[1];
-	_dKappa = parameters[2];
-	_dLambda = parameters[3];
-	_dM = parameters[4];
+	_dCK = parameters[0];
+	_dn = parameters[1];
+	_dNu = parameters[2];
+	_dRf = parameters[3];
+	_dc = parameters[4];
+	_dfi = parameters[5];
+
 }
 
 MatUserDefined* Elastic::MakeCopy()

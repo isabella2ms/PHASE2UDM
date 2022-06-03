@@ -34,27 +34,39 @@ public:
 	virtual double GetPoissonRatio();
 
 private:
-	//! Young's Modulus of Elasticity of the material.
-	double _dE;
+	//! CK
+	double _dCK;
 
-	//! Poisson's ratio of the material.
+	//! n
+	double _dn;
+
+	//! poisson
 	double _dNu;
 
-	//! Coeficiente Kappa
-	double _dKappa;
+	//! Rf
+	double _dRf;
 
-	//! Coeficiente Lambda
-	double _dLambda;
+	//! coesão
+	double _dc;
 
-	//! Inclinação M
-	double _dM;
+	//! ângulo de atrito
+	double _dfi;
+
+	// Modulo de Young
+	double _dE;
+
+	// indice de vazios 
+	double _de;
+
+	// Modulo Cisalhante
+	double _dG;
 
 };
 
 extern "C" __declspec(dllexport) MatUserDefined * GetMaterial(char* names)
 {
 	MatUserDefined* mat = NULL;
-	if (strcmp(names, "Elastic2") == 0) {
+	if (strcmp(names, "Hiperbolico") == 0) {
 		mat = new Elastic();
 	}
 	return mat;
@@ -71,7 +83,7 @@ extern "C" __declspec(dllexport) char* GetMaterialName(int id)
 	char* cmatName;
 	std::string matName;
 
-	if (id == 0) { matName = "Elastic2"; }
+	if (id == 0) { matName = "Hiperbolico"; }
 	else {
 		matName = "No material was found";
 	}
@@ -83,7 +95,7 @@ extern "C" __declspec(dllexport) char* GetMaterialName(int id)
 extern "C" __declspec(dllexport) int GetNumberOfConstitutiveParameter(char* matName)
 {
 	int nVars = 0;
-	if (strcmp(matName, "Elastic2") == 0) { nVars = 5; }
+	if (strcmp(matName, "Hiperbolico") == 0) { nVars = 6; }
 	return nVars;
 }
 
@@ -92,22 +104,25 @@ extern "C" __declspec(dllexport) char* GetNameOfConstitutiveParameter(char* matN
 	char* cparamName;
 	std::string paramName;
 	
-	if (strcmp(matName, "Elastic2") == 0) {
+	if (strcmp(matName, "Hiperbolico") == 0) {
 		switch (paramId) {
 		case 0:
-			paramName = "Young";
+			paramName = "CK";
 			break;
 		case 1:
-			paramName = "Poisson";
+			paramName = "n";
 			break;
 		case 2:
-			paramName = "Kappa";
+			paramName = "poisson";
 			break;
 		case 3:
-			paramName = "Lambda";
+			paramName = "Rf";
 			break;
 		case 4:
-			paramName = "M";
+			paramName = "coesão";
+			break;
+		case 5:
+			paramName = "ângulo de atrito";
 			break;
 		default:
 			paramName = "No param found";
